@@ -22,9 +22,14 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.6.1)
     sqlite3 (1.3.7)
+    tomparse (0.4.2)
     turn (0.9.6)
       ansi
     tzinfo (0.3.35)
+    yard (0.8.4.1)
+    yard-tomdoc (0.7.1)
+      tomparse (>= 0.4.0)
+      yard
 
 PLATFORMS
   ruby
@@ -35,3 +40,5 @@ DEPENDENCIES
   mocha
   sqlite3
   turn
+  yard
+  yard-tomdoc

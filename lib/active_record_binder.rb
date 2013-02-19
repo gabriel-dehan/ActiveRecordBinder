@@ -17,7 +17,7 @@ module Binder
   #
   #     # Your methods
   #   end
-  #
+  #   #
   #   # Or
   #   class ARMySqlPlug < Binder::AR
   #     database 'db'
@@ -34,15 +34,15 @@ module Binder
   #   foo.first
   #
   #   # Furthermore, the Binder::AR class, has some interesting class methods :
-  #
+  #   #
   #   Binder::AR::default_database # => ENV['APP_DB'] # This value would be used if no database had been set during the plus creation.
   #   Binder::AR::database # => Returns the current database used by the Binder in general (Would default to ENV['APP_DB'] if not specified)
   #   ARSqlitePlug::database # => :db (Works the same and returns this Plug Class's database parameters)
-  #
+  #   #
   #   # The same goes for the adapters :
   #   Binder::AR::default_adapter # => :sqlite3
   #   ARMySqlPlug::adapter # => :mysql
-  #
+  #   #
   #   # And connection parameters
   #   Binder::AR::connection # => {}
   #   ARMySqlPlug::connection # => { :user => 'Foo', :password => 'Bar', :host => 'localhost' }
@@ -163,7 +163,7 @@ module Binder
 
       # Public: Retrieves de default database
       #
-      # Returns a the content of ENV['APP_DB'].
+      # Returns a the content of ENV\['APP_DB'\].
       def default_database; ENV['APP_DB'] end
 
       # Public: Retrieves de default database

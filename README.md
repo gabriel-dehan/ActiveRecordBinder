@@ -2,7 +2,7 @@
 ============
 ```
 arb -v
-# => 1.0.0
+# => 1.0.1
 ```
 A Ruby library for interfacing with ActiveRecord and create easy elegant migrations.
 

@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.8.4.1
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'><h1><a href="https://rubygems.org/gems/active-record-binder">ActiveRecordBinder</a></h1>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_arb'>arb</span> <span class='op'>-</span><span class='id identifier rubyid_v'>v</span>
+<span class='comment'># =&gt; 1.0.0
+</span></code></pre>
+
+<p>A Ruby library for interfacing with ActiveRecord and create easy elegant migrations.</p>
+
+<h1>Installation</h1>
+
+<p><code>gem install active-record-binder</code></p>
+
+<h1>Why Binder ? What the frak is this ?</h1>
+
+<p>I wanted a tool to ease the creation of little Plugs and Adapters for ActiveRecord.</p>
+
+<p>The idea is that you Bind a class to ActiveRecord by subclassing it with Binder::AR.
+You can specify your own methods and delegate to ActiveRecord whenever you need.</p>
+
+<p>It&#39;s kind of a Proxy on steroids, that will do a lot for you.</p>
+
+<h2>Show me !</h2>
+
+<p>For example, if you want to create a Plug for your sqlite database :</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>SqlitePlug</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
+  <span class='kw'>end</span>
+</code></pre>
+
+<p>Would actually create a new MySqlPlug, that will connect to the database specified by your <code>ENV[&#39;APP_DB&#39;]</code>.</p>
+
+<p>The database adapter defaults to <code>:sqlite3</code>.</p>
+
+<p>Now, that&#39;s fine but you want to specify your database without using <code>ENV[&#39;APP_DB&#39;]</code>, and your application uses MySQL.</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>MySqlPlug</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
+    <span class='id identifier rubyid_database'>database</span> <span class='symbol'>:db</span>
+    <span class='id identifier rubyid_adapter'>adapter</span> <span class='symbol'>:mysql</span>
+    <span class='id identifier rubyid_connect_with'>connect_with</span> <span class='label'>user:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Foo</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Bar</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='label'>host:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>localhost</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+</code></pre>
+
+<p>You can specify a database or an adapter by passing a <code>Symbol</code> or a <code>String</code> by passing values to both the <code>database()</code> and the <code>adapter()</code> method.
+The <code>connect_with()</code> method can be used to pass a <code>Hash</code> of options to the <code>ActiveRecord::Base.establish_connexion()</code> call.</p>
+
+<p>Please notice that all your instances of MySqlPlug will use those values once defined this way.</p>
+
+<h2>How do we use this ?</h2>
+
+<pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>MySqlPlug</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
+    <span class='id identifier rubyid_database'>database</span> <span class='symbol'>:db</span>
+    <span class='id identifier rubyid_adapter'>adapter</span> <span class='symbol'>:mysql</span>
+    <span class='id identifier rubyid_connect_with'>connect_with</span> <span class='label'>user:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Foo</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Bar</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='label'>host:</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>localhost</span><span class='tstring_end'>'</span></span>
+
+    <span class='kw'>def</span> <span class='id identifier rubyid_find'>find</span> <span class='id identifier rubyid_args'>args</span>
+      <span class='comment'># But you could use a delegator
+</span>      <span class='id identifier rubyid_table'>table</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='id identifier rubyid_args'>args</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># A Model
+</span>  <span class='kw'>class</span> <span class='const'>Foo</span>
+    <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
+      <span class='comment'># Will bind this instance of the MySqlPlug to the `foos` table
+</span>      <span class='ivar'>@plug</span> <span class='op'>=</span> <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='symbol'>:foo</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>def</span> <span class='id identifier rubyid_find'>find</span>
+      <span class='comment'># But you could use a delegator
+</span>      <span class='ivar'>@plug</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+</code></pre>
+
+<p>You can use the <code>table</code> method on any instance of your Plug to get the table class.</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='ivar'>@plug</span> <span class='op'>=</span> <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='symbol'>:foo</span>
+  <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='ivar'>@plug</span><span class='period'>.</span><span class='id identifier rubyid_table'>table</span>
+  <span class='comment'># =&gt; MySqlPlug::Foo
+</span>  <span class='id identifier rubyid_table'>table</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='comment'># ActiveRecord method call.
+</span>  <span class='comment'># =&gt; [&lt;FooObject#1&gt;, &lt;FooObject#2, ...]
+</span></code></pre>
+
+<p>Notice how neatly namespaced is the ActiveRecord table class. This way we won&#39;t step over our <code>Foo</code> model.</p>
+
+<h1>The Migration System</h1>
+
+<p>So, I&#39;ve always found the ActiveRecord::Migration system a bit of a pain to use. Therefore, I took the liberty of using part of (<code>_Why&#39;s Camping Web Framework</code>)[<a href="https://github.com/camping/camping/">https://github.com/camping/camping/</a>] migration system.
+Now, you can create your migrations this way :</p>
+
+<pre class="code ruby"><code class="ruby">   <span class='kw'>class</span> <span class='const'>CreateFooTable</span> <span class='op'>&lt;</span> <span class='const'>MySqlPlug</span><span class='op'>::</span><span class='const'>Version</span> <span class='float'>1.0</span>
+     <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_up'>up</span>
+       <span class='id identifier rubyid_create_table'>create_table</span> <span class='symbol'>:foos</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_t'>t</span><span class='op'>|</span>
+         <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span> <span class='symbol'>:name</span>
+         <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_timestamps'>timestamps</span>
+       <span class='kw'>end</span>
+     <span class='kw'>end</span>
+
+     <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_down'>down</span>
+       <span class='id identifier rubyid_drop_table'>drop_table</span> <span class='symbol'>:foos</span>
+     <span class='kw'>end</span>
+   <span class='kw'>end</span>
+
+   <span class='kw'>class</span> <span class='const'>CreateBarTable</span> <span class='op'>&lt;</span> <span class='const'>MySqlPlug</span><span class='op'>::</span><span class='const'>Version</span> <span class='float'>1.1</span>
+     <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_up'>up</span>
+       <span class='id identifier rubyid_create_table'>create_table</span> <span class='symbol'>:bars</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_t'>t</span><span class='op'>|</span>
+         <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span> <span class='symbol'>:title</span>
+         <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_timestamps'>timestamps</span>
+       <span class='kw'>end</span>
+     <span class='kw'>end</span>
+
+     <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_down'>down</span>
+       <span class='id identifier rubyid_drop_table'>drop_table</span> <span class='symbol'>:bars</span>
+     <span class='kw'>end</span>
+   <span class='kw'>end</span>
+
+  <span class='comment'># You can get the migration version for a pecular migration class.
+</span>  <span class='const'>CreateFooTable</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span> <span class='comment'># =&gt; 1.0
+</span>  <span class='const'>CreateBarTable</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span> <span class='comment'># =&gt; 1.1
+</span></code></pre>
+
+<p>Isn&#39;t it neat ?
+You can now use the <code>migrate</code> method to execute your migrations.</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_migrate'>migrate</span>
+  <span class='comment'># =&gt; 1.1
+</span></code></pre>
+
+<p>Will execute everything up to the latest migration.
+But <code>migrate()</code> can also take a version number as an argument.</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_migrate'>migrate</span> <span class='int'>0</span>
+  <span class='comment'># =&gt; 0.0
+</span></code></pre>
+
+<p>This, will migrate everything down, reverting the changes as specified in each reverted migration <code>self.down</code> method.
+<code>ruby
+  MySqlPlug.migrate 1.0
+  # =&gt; 1.0
+</code>
+And finally, this will migrate up until it hits 1.0.</p>
+
+<h1>Want to know more ?</h1>
+
+<p>(Checkout the documentation !)[]</p>
+
+<h1>Want to contribute ?</h1>
+
+<p>Please, do fork and pull request !</p>
+
+<h2>Road map:</h2>
+
+<ul>
+<li>Create a command line tool : <code>arb</code></li>
+<li>Add a <code>arb migrate</code> command that will be able to execute migration and be linked to any developer&#39;s ruby script.</li>
+<li>Maybe create other Binder, like MongoDB, Datamapper, like <code>Binder::Mongo</code>, <code>Binder::DataMapper</code>. But the gem&#39;s name would have to change.</li>
+</ul>
+</div></div>
+
+    <div id="footer">
+  Generated on Tue Feb 19 23:42:29 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.4.1 (ruby-1.9.3).
+</div>
+
+  </body>
+</html>
