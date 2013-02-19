@@ -1,0 +1,37 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activemodel (3.2.12)
+      activesupport (= 3.2.12)
+      builder (~> 3.0.0)
+    activerecord (3.2.12)
+      activemodel (= 3.2.12)
+      activesupport (= 3.2.12)
+      arel (~> 3.0.2)
+      tzinfo (~> 0.3.29)
+    activesupport (3.2.12)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
+    ansi (1.4.3)
+    arel (3.0.2)
+    builder (3.0.4)
+    i18n (0.6.1)
+    metaclass (0.0.1)
+    minitest (4.6.1)
+    mocha (0.13.2)
+      metaclass (~> 0.0.1)
+    multi_json (1.6.1)
+    sqlite3 (1.3.7)
+    turn (0.9.6)
+      ansi
+    tzinfo (0.3.35)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord
+  minitest
+  mocha
+  sqlite3
+  turn
