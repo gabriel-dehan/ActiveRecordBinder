@@ -1,0 +1,11 @@
+$:.unshift File.dirname(__FILE__) + '/../lib'
+
+require 'cli/commands/commands'
+
+begin
+  Binder::Command.new ARGV
+rescue CommandParser::ParseError => ex
+  STDERR.puts "/!\\ #{ex.message}".colorize(:red)
+  puts ">> use " + "`#{File.basename($0)} --help` ".colorize(:green) + "for more details."
+  exit 1
+end
