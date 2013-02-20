@@ -88,6 +88,24 @@ _Please notice that all your instances of MySqlPlug will use those values once d
 
 Notice how neatly namespaced is the ActiveRecord table class. This way we won't step over our `Foo` model.
 
+# Relations
+If it pleases you, you can create your relations directly in the Binder class. Those methods call are delegated to the underlying table model when initiated.
+
+```ruby
+  class FooBinder < Binder::AR
+    has_one :bar
+  end
+  class BarBinder < Binder::AR
+    belongs_to :foo
+  end
+
+  # And (if the table are accordingly populated, see "The Migration System", below) :
+  foo = FooBinder.new(:foo).table
+  foo.first.bar # => <BarObject>
+```
+
+Delegated methods are the following : `has_many`, `has_one`, `has_and_belongs_to_many`, `belongs_to`.
+
 # The Migration System
 
 <<<<<<< HEAD

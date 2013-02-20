@@ -1,12 +1,37 @@
 require 'active_record'
 require 'active_support/core_ext/string'
+require 'forwardable'
+
+# Private: A simple module that delegates classes methods when needed, keeping the calls in memory.
+module DifferedDelegator
+  def register_delegators *args
+    args.each do |delegator|
+      delegator = delegator.to_s
+      module_eval %Q{
+        def self.#{delegator} *parameters
+          @delegators ||= []
+          @delegators << { name: :#{delegator}, params: parameters }
+        end
+      }
+    end
+  end
+
+  def delegate_to klass_or_object
+    @delegators.each do |data|
+      unless data.empty?
+        name = data[:name]
+        args = data[:params]
+        klass_or_object.send(name, *args)
+      end
+    end
+  end
+end
 
 class MigrationVersionError < Exception; end
 
 # Public: Namespace containing classes to create binder to.
 # A binder is simply a tool to use for Databases plugs or adaptors building.
 module Binder
-
   # Public: Active Record Binder class. You need to inherit from it to create your Plug or Adaptor.
   #
   # Examples
@@ -48,7 +73,10 @@ module Binder
   #   ARMySqlPlug::connection # => { :user => 'Foo', :password => 'Bar', :host => 'localhost' }
   #
   class AR
+    extend DifferedDelegator
+
     attr_reader :table_name, :table
+    register_delegators :has_many, :has_one, :has_and_belongs_to_many, :belongs_to
 
     # Public: Returns a new instance of the binder's class.
     # It also automaticaly establish a connection with the database throught the specified adapter,
@@ -67,7 +95,12 @@ module Binder
       @table_name = table_name
       this = self.class
 
+      # Retrieves or Create the ActiveRecord::Base subclass that will match the table.
       table = meta_def_ar_class(this.database, this.adapter, this.connection)
+      # Handle ActiveRecord::Base delegation, to ensure painless associations
+      self.class.delegate_to table
+
+      # Establishes a connection to the database
       table.connect unless table.connected?
     end
 
