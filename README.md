@@ -114,7 +114,6 @@ Delegated methods are the following : `has_many`, `has_one`, `has_and_belongs_to
 
 # The Migration System
 
-<<<<<<< HEAD
 I've always found the ActiveRecord::Migration system a bit of a pain to use.
 
 Therefore, I took the liberty of using pieces of (`_Why's Camping Web Framework`)[https://github.com/camping/camping/]'s migration system.
