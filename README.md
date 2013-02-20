@@ -2,7 +2,13 @@
 ============
 ```
 arb -v
-# => 1.0.1
+# => 1.1.0
+
+arb --changelog
+# V 1.1.0 : Introducing delegation for ActiveRecord::Base relation methods.
+# V 1.0.1 : Minor fixes and Documentation creation.
+# V 1.0.0 : Release
+#
 ```
 A Ruby library for an easier interfacing with ActiveRecord. And an easier way to create elegant migrations.
 
