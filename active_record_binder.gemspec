@@ -1,6 +1,8 @@
+require '../lib/version'
+
 Gem::Specification.new do |s|
   s.name         = 'active-record-binder'
-  s.version      = '1.1.0'
+  s.version      = Binder::VERSION
   s.date         = '2013-02-20'
   s.summary      = 'Ruby library to ease the process of interfacing with ActiveRecord. Allows to create simple and elegant migrations.'
   s.description  = 'Ruby library to ease the process of interfacing with ActiveRecord. Allows to create simple and elegant migrations.'
