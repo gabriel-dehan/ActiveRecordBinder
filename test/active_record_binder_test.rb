@@ -4,6 +4,8 @@ require_relative '../lib/active_record_binder'
 class MockBond < Binder::AR
   database __DIR__ + '/foo.sqlite3'
   adapter  :sqlite3
+
+  has_one :article
 end
 
 class OtherMockBond < Binder::AR
@@ -19,6 +21,7 @@ class FooCreateTable < MockBond::Version 1.0
   def self.up
     create_table :tags do |t|
       t.string :name
+      t.integer :tag_id, default: 0
       t.timestamps
     end
   end
@@ -258,5 +261,43 @@ describe Binder::AR do
       end # Context Schema Metadatas
 
     end
+  end
+end
+
+class TestDelegators
+  extend DifferedDelegator
+end
+
+class TestDelegatedTo
+  def self.foo
+    @@test ||= []
+    @@test << true
+  end
+
+  def self.bar
+    @@test ||= []
+    @@test << false
+  end
+
+  def self.test
+    @@test
+  end
+end
+
+describe DifferedDelegator do
+  it 'provides a way to register delegators for a class' do
+    TestDelegators.register_delegators :foo
+    TestDelegators.must_respond_to :foo
+  end
+
+  it 'provides a way to call the delegation process and execute every registered delegation' do
+    TestDelegators.register_delegators :foo, :bar
+
+    TestDelegators.foo
+    TestDelegators.bar
+
+    TestDelegators.delegate_to TestDelegatedTo
+
+    TestDelegatedTo.test.must_equal [true, false]
   end
 end
