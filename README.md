@@ -4,13 +4,13 @@
 arb -v
 # => 1.0.1
 ```
-A Ruby library for interfacing with ActiveRecord and create easy elegant migrations.
+A Ruby library for an easier interfacing with ActiveRecord. And an easier way to create elegant migrations.
 
 # Installation
 `gem install active-record-binder`
 
 # Why Binder ? What the frak is this ?
-I wanted a tool to ease the creation of little Plugs and Adapters for ActiveRecord.
+I needed a tool to ease the creation of little Plugs and Adapters for ActiveRecord.
 
 The idea is that you Bind a class to ActiveRecord by subclassing it with Binder::AR.
 You can specify your own methods and delegate to ActiveRecord whenever you need.
@@ -18,18 +18,19 @@ You can specify your own methods and delegate to ActiveRecord whenever you need.
 It's kind of a Proxy on steroids, that will do a lot for you.
 
 ## Show me !
-For example, if you want to create a Plug for your sqlite database :
+You want to create a Plug for your sqlite database :
 
 ```ruby
   class SqlitePlug < Binder::AR
   end
 ```
 
-Would actually create a new MySqlPlug, that will connect to the database specified by your `ENV['APP_DB']`.
+Those lines will create a new `MySqlPlug`, and it will connect to the database specified by your `ENV['APP_DB']`.
+Also, the database adapter defaults to `:sqlite3`.
 
-The database adapter defaults to `:sqlite3`.
-
-Now, that's fine but you want to specify your database without using `ENV['APP_DB']`, and your application uses MySQL.
+Now. All this is fine. But you want more :
+* You want to select a precise database without using `ENV['APP_DB']`;
+* Your application uses MySQL.
 
 ```ruby
   class MySqlPlug < Binder::AR
@@ -39,10 +40,13 @@ Now, that's fine but you want to specify your database without using `ENV['APP_D
   end
 ```
 
-You can specify a database or an adapter by passing a `Symbol` or a `String` by passing values to both the `database()` and the `adapter()` method.
+As you can see : you can specify a database or an adapter by passing a `Symbol` or a `String` to both the
+* `database()` and the
+* `adapter()` methods.
+
 The `connect_with()` method can be used to pass a `Hash` of options to the `ActiveRecord::Base.establish_connexion()` call.
 
-Please notice that all your instances of MySqlPlug will use those values once defined this way.
+_Please notice that all your instances of MySqlPlug will use those values once defined this way._
 
 ## How do we use this ?
 
@@ -72,7 +76,7 @@ Please notice that all your instances of MySqlPlug will use those values once de
   end
 ```
 
-You can use the `table` method on any instance of your Plug to get the table class.
+**Note :** You can use the `table` method on any instance of your Plug to get the table class (An ActiveRecord Class Object).
 
 ```ruby
   @plug = MySqlPlug.new :foo
@@ -86,8 +90,10 @@ Notice how neatly namespaced is the ActiveRecord table class. This way we won't 
 
 # The Migration System
 
-So, I've always found the ActiveRecord::Migration system a bit of a pain to use. Therefore, I took the liberty of using part of (`_Why's Camping Web Framework`)[https://github.com/camping/camping/] migration system.
-Now, you can create your migrations this way :
+I've always found the ActiveRecord::Migration system a bit of a pain to use.
+
+Therefore, I took the liberty of using part of (`_Why's Camping Web Framework`)[https://github.com/camping/camping/] migration system.
+You can now create your migrations this way :
 
 ```ruby
    class CreateFooTable < MySqlPlug::Version 1.0
@@ -121,8 +127,9 @@ Now, you can create your migrations this way :
   CreateBarTable.version # => 1.1
 ```
 
-Isn't it neat ?
-You can now use the `migrate` method to execute your migrations.
+Isn't it neat ?.
+
+Now, boy : just use the `migrate` method to execute your migrations.
 
 ```ruby
   MySqlPlug.migrate
