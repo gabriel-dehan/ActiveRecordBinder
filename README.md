@@ -90,9 +90,10 @@ Notice how neatly namespaced is the ActiveRecord table class. This way we won't 
 
 # The Migration System
 
+<<<<<<< HEAD
 I've always found the ActiveRecord::Migration system a bit of a pain to use.
 
-Therefore, I took the liberty of using part of (`_Why's Camping Web Framework`)[https://github.com/camping/camping/] migration system.
+Therefore, I took the liberty of using pieces of (`_Why's Camping Web Framework`)[https://github.com/camping/camping/]'s migration system.
 You can now create your migrations this way :
 
 ```ruby
@@ -150,7 +151,8 @@ This, will migrate everything down, reverting the changes as specified in each r
 And finally, this will migrate up until it hits 1.0.
 
 # Want to know more ?
-(Checkout the documentation !)[]
+[Checkout the documentation !](http://rubydoc.info/gems/active-record-binder/1.0.1/frames)
+Or dive in, the code is pretty straightforward and well documented. And there is a lot of tests.
 
 # Want to contribute ?
 Please, do fork and pull request !
