@@ -1,48 +1,7 @@
 require_relative 'minitest_helper'
 require_relative '../lib/active_record_binder'
-
-class MockBond < Binder::AR
-  database __DIR__ + '/foo.sqlite3'
-  adapter  :sqlite3
-
-  has_one :article
-end
-
-class OtherMockBond < Binder::AR
-  database :bar
-  adapter  :sqlite3
-end
-
-# See test/foo.sqlite3
-class Article < ActiveRecord::Base
-end
-
-class FooCreateTable < MockBond::Version 1.0
-  def self.up
-    create_table :tags do |t|
-      t.string :name
-      t.integer :tag_id, default: 0
-      t.timestamps
-    end
-  end
-
-  def self.down
-    drop_table :tags
-  end
-end
-
-class BarCreateTable < MockBond::Version 1.1
-  def self.up
-    create_table :foobz do |t|
-      t.string :foobar
-      t.timestamps
-    end
-  end
-
-  def self.down
-    drop_table :foobz
-  end
-end
+require_relative './mocks'
+require_relative './migrations'
 
 describe Binder::AR do
   describe 'Database information' do
