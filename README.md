@@ -2,9 +2,10 @@
 ============
 ```
 arb -v
-# => 1.1.0
+# => 1.2.0
 
 arb --changelog
+# V 1.2.0 : Bug fixes, refactoring and introduction of the new command-line-tool : `arb`
 # V 1.1.0 : Introducing delegation for ActiveRecord::Base relation methods.
 # V 1.0.1 : Minor fixes and Documentation creation.
 # V 1.0.0 : Release
