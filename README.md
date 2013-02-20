@@ -135,7 +135,7 @@ Now, boy : just use the `migrate` method to execute your migrations.
   MySqlPlug.migrate
   # => 1.1
 ```
-Will execute everything up to the latest migration.
+This executes everything up to the latest migration.
 But `migrate()` can also take a version number as an argument.
 
 ```ruby
