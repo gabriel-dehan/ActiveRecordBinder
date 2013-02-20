@@ -174,6 +174,36 @@ This, will migrate everything down, reverting the changes as specified in each r
 ```
 And finally, this will migrate up until it hits 1.0.
 
+# The Command Line Tool
+Active Record Binder ships with a neat little CLI : `arb`
+
+ARB is a small easily extandable Command Line Interface. And it's pretty. Beautiful colors everywhere. Awesome. Seriously.
+To use it :
+```
+$ arb version
+# => Binder::AR::Version => 1.2.0
+```
+
+You can display the help using `arb help` or `arb -h`
+
+But, the most intersting part of this CLI is the migrate command. You can easily run your migrations for a specific plug :
+```
+$ arb migrate --version 1.1 --directory migrations/ --adapter MySqlitePlug
+```
+Will migrate to 1.1, using the migrations found in the `migrations/` directory and calling `MySqlitePlug.migrate`.
+
+You can specify multiples options, and there is an alternative syntax :
+```
+# => You can specify multiple directories through `--directory` or `--d`
+$ arb migrate -v 0 -d migrations/foo/ migrations/bar -a MySqlitePlug
+
+# => You can load directories recursively with `-r` or `--recursive`
+$ arb migrate -v 0 --recursive migrations/ --plug MySqlitePlug
+
+# => You can can also load files using `-f` or `--file`
+$ arb migrate -v 1.0 -f migrations/foo/create_foo_table.rb --adapter MySqlitePlug
+```
+
 # Want to know more ?
 [Checkout the documentation !](http://rubydoc.info/gems/active-record-binder/1.0.1/frames)
 Or dive in, the code is pretty straightforward and well documented. And there is a lot of tests.
@@ -182,6 +212,4 @@ Or dive in, the code is pretty straightforward and well documented. And there is
 Please, do fork and pull request !
 
 ## Road map:
-* Create a command line tool : `arb`
-* Add a `arb migrate` command that will be able to execute migration and be linked to any developer's ruby script.
 * Maybe create other Binder, like MongoDB, Datamapper, like `Binder::Mongo`, `Binder::DataMapper`. But the gem's name would have to change.

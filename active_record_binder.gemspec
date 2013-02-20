@@ -10,4 +10,5 @@ Gem::Specification.new do |s|
   s.email        = 'dehan.gabriel@gmail.com'
   s.files        = ['lib/active_record_binder.rb']
   s.homepage     = 'https://github.com/gabriel-dehan/ActiveRecordBinder'
+  s.executable   = ['arb']
 end
