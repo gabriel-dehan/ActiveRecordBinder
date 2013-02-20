@@ -1,6 +1,5 @@
 require 'active_record'
 require 'active_support/core_ext/string'
-require 'forwardable'
 
 # Private: A simple module that delegates classes methods when needed, keeping the calls in memory.
 module DifferedDelegator
@@ -28,6 +27,7 @@ module DifferedDelegator
 end
 
 class MigrationVersionError < Exception; end
+class MigrationProcessError < Exception; end
 
 # Public: Namespace containing classes to create binder to.
 # A binder is simply a tool to use for Databases plugs or adaptors building.
@@ -93,10 +93,10 @@ module Binder
     # Returns an instance of the binder's class.
     def initialize table_name
       @table_name = table_name
-      this = self.class
 
       # Retrieves or Create the ActiveRecord::Base subclass that will match the table.
-      table = meta_def_ar_class(this.database, this.adapter, this.connection)
+      table = meta_def_ar_class
+
       # Handle ActiveRecord::Base delegation, to ensure painless associations
       self.class.delegate_to table
 
@@ -112,7 +112,7 @@ module Binder
     # _params   - the connection parameters
     #
     # Returns the class object.
-    def meta_def_ar_class(_database, _adapter, _params)
+    def meta_def_ar_class
       klass  = table_name.to_s.classify
       binder = self.class
 
@@ -123,13 +123,7 @@ module Binder
           binder.const_set(klass,
           Class.new(ActiveRecord::Base) do                      # class `TableName` < ActiveRecord::Base
             singleton_class.send(:define_method, :connect) do   #   def self.connect
-              opts = { database: _database, adapter:  _adapter }.merge(_params)
-              # We ensure we have a string for the adapter
-              opts[:adapter] = opts[:adapter].to_s
-              # If we have a symbol for the database and the adapter is sqlite3, we create a string and add '.sqlite3' to the end
-              opts[:database] = "#{opts[:database]}.sqlite3" if opts[:adapter] == 'sqlite3' and opts[:database].class == Symbol
-
-              ActiveRecord::Base.establish_connection(opts)
+              ActiveRecord::Base.establish_connection(binder.connection_data)
             end                                                 #   end
           end)                                                  # end
         end #if
@@ -193,6 +187,18 @@ module Binder
         @connection ||= opts
       end
       alias :connect_with :connection
+
+      # Public: Retrieves a clean set of connection data to establish a connection
+      #
+      # Returns a Hash.
+      def connection_data
+        opts = { database: self.database, adapter: self.adapter }.merge(self.connection)
+      # We ensure we have a string for the adapter
+        opts[:adapter] = opts[:adapter].to_s
+        # If we have a symbol for the database and the adapter is sqlite3, we create a string and add '.sqlite3' to the end
+        opts[:database] = "#{opts[:database]}.sqlite3" if opts[:adapter] == 'sqlite3' and opts[:database].class == Symbol
+        opts
+      end
 
       # Public: Retrieves de default database
       #
@@ -324,6 +330,8 @@ module Binder
       #
       # Returns Nothing.
       def __create_meta_data_table_for schema
+        ActiveRecord::Base.establish_connection(self.connection_data) unless schema.connected?
+
         # Clears the table cache for the schema (remove TableDoesNotExists if a table actually exists)
         schema.clear_cache!
 
