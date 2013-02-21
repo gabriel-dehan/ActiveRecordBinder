@@ -1,30 +1,6 @@
 require 'active_record'
 require 'active_support/core_ext/string'
-
-# Private: A simple module that delegates classes methods when needed, keeping the calls in memory.
-module DifferedDelegator
-  def register_delegators *args
-    args.each do |delegator|
-      delegator = delegator.to_s
-      module_eval %Q{
-        def self.#{delegator} *parameters
-          @delegators ||= []
-          @delegators << { name: :#{delegator}, params: parameters }
-        end
-      }
-    end
-  end
-
-  def delegate_to klass_or_object
-    @delegators.each do |data|
-      unless data.empty?
-        name = data[:name]
-        args = data[:params]
-        klass_or_object.send(name, *args)
-      end
-    end
-  end
-end
+require_relative './defered_delegator'
 
 class MigrationVersionError < Exception; end
 class MigrationProcessError < Exception; end
@@ -73,7 +49,7 @@ module Binder
   #   ARMySqlPlug::connection # => { :user => 'Foo', :password => 'Bar', :host => 'localhost' }
   #
   class AR
-    extend DifferedDelegator
+    extend DeferedDelegator
 
     attr_reader :table_name, :table
     register_delegators :has_many, :has_one, :has_and_belongs_to_many, :belongs_to

@@ -1,6 +1,7 @@
 require_relative './version'
 
 module Binder
+  # Public: [Command] Displays the help for `arb`. Used via the `arb` command.
   class Help < Binder::Strategy
     def execute args
       instructions = []

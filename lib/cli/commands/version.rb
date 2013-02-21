@@ -1,6 +1,7 @@
 require 'version'
 
 module Binder
+  # Public: [Command] Displays the current ARB version. Used via the `arb` command.
   class Version < Binder::Strategy
     def execute args
       "Binder::AR::Version => #{Binder::VERSION}".colorize(:orange)

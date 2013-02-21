@@ -1,6 +1,7 @@
 require 'active_record_binder'
 
 module Binder
+  # Public: [Command] Runs your migrations. Used via the `arb` command.
   class Migrate < Binder::Strategy
     def execute args
       commands = CommandParser::parse_options(args)

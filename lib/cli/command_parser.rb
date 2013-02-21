@@ -1,4 +1,14 @@
 module CommandParser
+  # Public: Parse options and creates an array of hash data for each.
+  #
+  # args - An Array of options and parameters to parse.
+  #
+  # Examples
+  #
+  #   CommandParser::parse_options "--directory lib/ migrations/ --adapter MySqlPlug"
+  #   # => [{ option: 'directory', option_args: ["lib/", "migrations/"] }, { option: 'adapter', option_args: ["MySqlPlug"] }]
+  #
+  # Returns a parsed array.
   def self.parse_options(args)
     parsed = []
     last_option = ""
