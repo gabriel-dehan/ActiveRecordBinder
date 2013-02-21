@@ -32,7 +32,6 @@ module Binder
 
     def directory blobs, recursively = false
       blobs.each do |blob|
-        original_name  = blob
         blob = File::absolute_path(blob)
         raise CommandParser::ParseError.new("Invalid argument : no such file or directory #{blob}.") unless File::exists?(blob)
 
