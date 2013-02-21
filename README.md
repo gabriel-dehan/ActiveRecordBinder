@@ -204,6 +204,8 @@ $ arb migrate -v 0 --recursive migrations/ --plug MySqlitePlug
 $ arb migrate -v 1.0 -f migrations/foo/create_foo_table.rb --adapter MySqlitePlug
 ```
 
+<img src="https://raw.github.com/gabriel-dehan/ActiveRecordBinder/master/extras/cli_help.png" alt="Command Line Interface screenshot"/>
+
 # Want to know more ?
 [Checkout the documentation !](http://rubydoc.info/gems/active-record-binder/1.0.1/frames)
 Or dive in, the code is pretty straightforward and well documented. And there is a lot of tests.
