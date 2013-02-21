@@ -224,7 +224,7 @@ describe Binder::AR do
 end
 
 class TestDelegators
-  extend DifferedDelegator
+  extend DeferedDelegator
 end
 
 class TestDelegatedTo
@@ -243,7 +243,7 @@ class TestDelegatedTo
   end
 end
 
-describe DifferedDelegator do
+describe DeferedDelegator do
   it 'provides a way to register delegators for a class' do
     TestDelegators.register_delegators :foo
     TestDelegators.must_respond_to :foo
