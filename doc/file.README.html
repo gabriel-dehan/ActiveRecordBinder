@@ -64,10 +64,17 @@
     <div id="content"><div id='filecontents'><h1><a href="https://rubygems.org/gems/active-record-binder">ActiveRecordBinder</a></h1>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_arb'>arb</span> <span class='op'>-</span><span class='id identifier rubyid_v'>v</span>
-<span class='comment'># =&gt; 1.0.0
+<span class='comment'># =&gt; 1.2.0
+</span>
+<span class='id identifier rubyid_arb'>arb</span> <span class='op'>-</span><span class='op'>-</span><span class='id identifier rubyid_changelog'>changelog</span>
+<span class='comment'># V 1.2.0 : Bug fixes, refactoring and introduction of the new command-line-tool : `arb`
+</span><span class='comment'># V 1.1.0 : Introducing delegation for ActiveRecord::Base relation methods.
+</span><span class='comment'># V 1.0.1 : Minor fixes and Documentation creation.
+</span><span class='comment'># V 1.0.0 : Release
+</span><span class='comment'>#
 </span></code></pre>
 
-<p>A Ruby library for interfacing with ActiveRecord and create easy elegant migrations.</p>
+<p>A Ruby library for an easier interfacing with ActiveRecord. And an easier way to create elegant migrations.</p>
 
 <h1>Installation</h1>
 
@@ -75,7 +82,7 @@
 
 <h1>Why Binder ? What the frak is this ?</h1>
 
-<p>I wanted a tool to ease the creation of little Plugs and Adapters for ActiveRecord.</p>
+<p>I needed a tool to ease the creation of little Plugs and Adapters for ActiveRecord.</p>
 
 <p>The idea is that you Bind a class to ActiveRecord by subclassing it with Binder::AR.
 You can specify your own methods and delegate to ActiveRecord whenever you need.</p>
@@ -84,17 +91,18 @@ You can specify your own methods and delegate to ActiveRecord whenever you need.
 
 <h2>Show me !</h2>
 
-<p>For example, if you want to create a Plug for your sqlite database :</p>
+<p>You want to create a Plug for your sqlite database :</p>
 
 <pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>SqlitePlug</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
   <span class='kw'>end</span>
 </code></pre>
 
-<p>Would actually create a new MySqlPlug, that will connect to the database specified by your <code>ENV[&#39;APP_DB&#39;]</code>.</p>
+<p>Those lines will create a new <code>MySqlPlug</code>, and it will connect to the database specified by your <code>ENV[&#39;APP_DB&#39;]</code>.
+Also, the database adapter defaults to <code>:sqlite3</code>.</p>
 
-<p>The database adapter defaults to <code>:sqlite3</code>.</p>
-
-<p>Now, that&#39;s fine but you want to specify your database without using <code>ENV[&#39;APP_DB&#39;]</code>, and your application uses MySQL.</p>
+<p>Now. All this is fine. But you want more :
+* You want to select a precise database without using <code>ENV[&#39;APP_DB&#39;]</code>;
+* Your application uses MySQL.</p>
 
 <pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>MySqlPlug</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
     <span class='id identifier rubyid_database'>database</span> <span class='symbol'>:db</span>
@@ -103,10 +111,13 @@ You can specify your own methods and delegate to ActiveRecord whenever you need.
   <span class='kw'>end</span>
 </code></pre>
 
-<p>You can specify a database or an adapter by passing a <code>Symbol</code> or a <code>String</code> by passing values to both the <code>database()</code> and the <code>adapter()</code> method.
-The <code>connect_with()</code> method can be used to pass a <code>Hash</code> of options to the <code>ActiveRecord::Base.establish_connexion()</code> call.</p>
+<p>As you can see : you can specify a database or an adapter by passing a <code>Symbol</code> or a <code>String</code> to both the
+* <code>database()</code> and the
+* <code>adapter()</code> methods.</p>
 
-<p>Please notice that all your instances of MySqlPlug will use those values once defined this way.</p>
+<p>The <code>connect_with()</code> method can be used to pass a <code>Hash</code> of options to the <code>ActiveRecord::Base.establish_connexion()</code> call.</p>
+
+<p><em>Please notice that all your instances of MySqlPlug will use those values once defined this way.</em></p>
 
 <h2>How do we use this ?</h2>
 
@@ -135,7 +146,7 @@ The <code>connect_with()</code> method can be used to pass a <code>Hash</code> o
   <span class='kw'>end</span>
 </code></pre>
 
-<p>You can use the <code>table</code> method on any instance of your Plug to get the table class.</p>
+<p><strong>Note :</strong> You can use the <code>table</code> method on any instance of your Plug to get the table class (An ActiveRecord Class Object).</p>
 
 <pre class="code ruby"><code class="ruby">  <span class='ivar'>@plug</span> <span class='op'>=</span> <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='symbol'>:foo</span>
   <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='ivar'>@plug</span><span class='period'>.</span><span class='id identifier rubyid_table'>table</span>
@@ -146,10 +157,30 @@ The <code>connect_with()</code> method can be used to pass a <code>Hash</code> o
 
 <p>Notice how neatly namespaced is the ActiveRecord table class. This way we won&#39;t step over our <code>Foo</code> model.</p>
 
+<h1>Relations</h1>
+
+<p>If it pleases you, you can create your relations directly in the Binder class. Those methods call are delegated to the underlying table model when initiated.</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='kw'>class</span> <span class='const'>FooBinder</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
+    <span class='id identifier rubyid_has_one'>has_one</span> <span class='symbol'>:bar</span>
+  <span class='kw'>end</span>
+  <span class='kw'>class</span> <span class='const'>BarBinder</span> <span class='op'>&lt;</span> <span class='const'>Binder</span><span class='op'>::</span><span class='const'>AR</span>
+    <span class='id identifier rubyid_belongs_to'>belongs_to</span> <span class='symbol'>:foo</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># And (if the table are accordingly populated, see &quot;The Migration System&quot;, below) :
+</span>  <span class='id identifier rubyid_foo'>foo</span> <span class='op'>=</span> <span class='const'>FooBinder</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:foo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_table'>table</span>
+  <span class='id identifier rubyid_foo'>foo</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='period'>.</span><span class='id identifier rubyid_bar'>bar</span> <span class='comment'># =&gt; &lt;BarObject&gt;
+</span></code></pre>
+
+<p>Delegated methods are the following : <code>has_many</code>, <code>has_one</code>, <code>has_and_belongs_to_many</code>, <code>belongs_to</code>.</p>
+
 <h1>The Migration System</h1>
 
-<p>So, I&#39;ve always found the ActiveRecord::Migration system a bit of a pain to use. Therefore, I took the liberty of using part of (<code>_Why&#39;s Camping Web Framework</code>)[<a href="https://github.com/camping/camping/">https://github.com/camping/camping/</a>] migration system.
-Now, you can create your migrations this way :</p>
+<p>I&#39;ve always found the ActiveRecord::Migration system a bit of a pain to use.</p>
+
+<p>Therefore, I took the liberty of using pieces of <a href="https://github.com/camping/camping/"><code>_Why&#39;s Camping Web Framework&#39;s</code></a> migration system.
+You can now create your migrations this way :</p>
 
 <pre class="code ruby"><code class="ruby">   <span class='kw'>class</span> <span class='const'>CreateFooTable</span> <span class='op'>&lt;</span> <span class='const'>MySqlPlug</span><span class='op'>::</span><span class='const'>Version</span> <span class='float'>1.0</span>
      <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_up'>up</span>
@@ -182,14 +213,15 @@ Now, you can create your migrations this way :</p>
 </span>  <span class='const'>CreateBarTable</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span> <span class='comment'># =&gt; 1.1
 </span></code></pre>
 
-<p>Isn&#39;t it neat ?
-You can now use the <code>migrate</code> method to execute your migrations.</p>
+<p>Isn&#39;t it neat ?.</p>
+
+<p>Now, boy : just use the <code>migrate</code> method to execute your migrations.</p>
 
 <pre class="code ruby"><code class="ruby">  <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_migrate'>migrate</span>
   <span class='comment'># =&gt; 1.1
 </span></code></pre>
 
-<p>Will execute everything up to the latest migration.
+<p>This executes everything up to the latest migration.
 But <code>migrate()</code> can also take a version number as an argument.</p>
 
 <pre class="code ruby"><code class="ruby">  <span class='const'>MySqlPlug</span><span class='period'>.</span><span class='id identifier rubyid_migrate'>migrate</span> <span class='int'>0</span>
@@ -203,9 +235,49 @@ But <code>migrate()</code> can also take a version number as an argument.</p>
 </code>
 And finally, this will migrate up until it hits 1.0.</p>
 
+<h1>The Command Line Tool</h1>
+
+<p>Active Record Binder ships with a neat little CLI : <code>arb</code></p>
+
+<p>ARB is a small easily extandable Command Line Interface. And it&#39;s pretty. Beautiful colors everywhere. Awesome. Seriously.
+To use it :
+```
+$ arb version</p>
+
+<h1>=&gt; Binder::AR::Version =&gt; 1.2.0</h1>
+
+<pre class="code ruby"><code class="ruby">
+You can display the help using `arb help` or `arb -h`
+
+But, the most intersting part of this CLI is the migrate command. You can easily run your migrations for a specific plug :
+</code></pre>
+
+<p>$ arb migrate --version 1.1 --directory migrations/ --adapter MySqlitePlug
+``<code>
+Will migrate to 1.1, using the migrations found in the</code>migrations/<code>directory and calling</code>MySqlitePlug.migrate`.</p>
+
+<p>You can specify multiples options, and there is an alternative syntax :
+```</p>
+
+<h1>=&gt; You can specify multiple directories through <code>--directory</code> or <code>--d</code></h1>
+
+<p>$ arb migrate -v 0 -d migrations/foo/ migrations/bar -a MySqlitePlug</p>
+
+<h1>=&gt; You can load directories recursively with <code>-r</code> or <code>--recursive</code></h1>
+
+<p>$ arb migrate -v 0 --recursive migrations/ --plug MySqlitePlug</p>
+
+<h1>=&gt; You can can also load files using <code>-f</code> or <code>--file</code></h1>
+
+<p>$ arb migrate -v 1.0 -f migrations/foo/create_foo_table.rb --adapter MySqlitePlug
+```</p>
+
+<p><img src="https://raw.github.com/gabriel-dehan/ActiveRecordBinder/master/extras/cli_help.png" alt="Command Line Interface screenshot"/></p>
+
 <h1>Want to know more ?</h1>
 
-<p>(Checkout the documentation !)[]</p>
+<p><a href="http://rubydoc.info/gems/active-record-binder/1.0.1/frames">Checkout the documentation !</a>
+Or dive in, the code is pretty straightforward and well documented. And there is a lot of tests.</p>
 
 <h1>Want to contribute ?</h1>
 
@@ -214,14 +286,12 @@ And finally, this will migrate up until it hits 1.0.</p>
 <h2>Road map:</h2>
 
 <ul>
-<li>Create a command line tool : <code>arb</code></li>
-<li>Add a <code>arb migrate</code> command that will be able to execute migration and be linked to any developer&#39;s ruby script.</li>
 <li>Maybe create other Binder, like MongoDB, Datamapper, like <code>Binder::Mongo</code>, <code>Binder::DataMapper</code>. But the gem&#39;s name would have to change.</li>
 </ul>
 </div></div>
 
     <div id="footer">
-  Generated on Tue Feb 19 23:42:29 2013 by
+  Generated on Thu Feb 21 02:06:16 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.4.1 (ruby-1.9.3).
 </div>

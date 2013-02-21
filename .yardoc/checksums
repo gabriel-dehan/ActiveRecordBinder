@@ -1,1 +1,10 @@
-lib/active_record_binder.rb 177e18c9b691f23e492891bb737e3ebc00103fa4
+lib/active_record_binder.rb 75d859cd718916b7dfe8fa87b00d0a370215e5f3
+lib/cli/command.rb e06cee733360171939c89fbb5e275616be7137c2
+lib/cli/command_parser.rb fdd3364c853bb19d3d2b20b03aa5d9c38f954116
+lib/cli/commands/commands.rb 3a256ae7b38e9ac5ffb11c3acf7698b5a9886a0e
+lib/cli/commands/help.rb 0c32a78021cb93589d0a22d789f989388eaa83c4
+lib/cli/commands/migrate.rb 2ee96d19fc43bf7c7591d9dd0cc04cbd7abd054a
+lib/cli/commands/version.rb 269a32bf0403aded21a325122ac68bae1e38a50a
+lib/cli/core_ext.rb 0606241a98748d32cf180c8efe138d4d75c9908b
+lib/defered_delegator.rb 3a84cb2700c09845cf4b0efd9055f6a66abf5a17
+lib/version.rb ba486214f814cc97590cd3d80b61eb5d7fba4efd
